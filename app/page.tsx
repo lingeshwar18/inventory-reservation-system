@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
+  const [timer, setTimer] = useState(900);
 
   async function fetchProducts() {
     const res = await fetch("/api/products");
@@ -32,6 +33,32 @@ export default function Home() {
 
     if (data.success) {
       alert("Stock Reserved!");
+      setTimer(900);
+      fetchProducts();
+    } else {
+      alert(data.error);
+    }
+  }
+
+  async function releaseStock(
+    productId: string,
+    warehouseId: string
+  ) {
+    const res = await fetch("/api/release", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        productId,
+        warehouseId
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Stock Released!");
       fetchProducts();
     } else {
       alert(data.error);
@@ -42,11 +69,34 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 0) {
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
+
   return (
     <main className="p-10">
-      <h1 className="text-4xl font-bold mb-8">
+      <h1 className="text-4xl font-bold mb-4">
         Inventory System
       </h1>
+
+      <p className="mb-8 text-red-500 font-semibold">
+        Reservation expires in:{" "}
+        {minutes}:
+        {seconds.toString().padStart(2, "0")}
+      </p>
 
       <div className="grid gap-6">
         {products.map((product) => (
@@ -73,30 +123,42 @@ export default function Home() {
                   className="mb-4"
                 >
                   <p>
-                    Warehouse:
-                    {" "}
+                    Warehouse:{" "}
                     <strong>
                       {inventory.warehouse.name}
                     </strong>
                   </p>
 
                   <p className="mb-3">
-                    Available Stock:
-                    {" "}
+                    Available Stock:{" "}
                     {available}
                   </p>
 
-                  <button
-                    onClick={() =>
-                      reserveStock(
-                        product.id,
-                        inventory.warehouse.id
-                      )
-                    }
-                    className="bg-black text-white px-4 py-2 rounded-lg"
-                  >
-                    Reserve Stock
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() =>
+                        reserveStock(
+                          product.id,
+                          inventory.warehouse.id
+                        )
+                      }
+                      className="bg-black text-white px-4 py-2 rounded-lg"
+                    >
+                      Reserve Stock
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        releaseStock(
+                          product.id,
+                          inventory.warehouse.id
+                        )
+                      }
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                    >
+                      Release Stock
+                    </button>
+                  </div>
                 </div>
               );
             })}
