@@ -32,7 +32,7 @@ export default function Home() {
     const data = await res.json();
 
     if (data.success) {
-      alert("Stock Reserved!");
+     window.location.href =`/reservation?reservationId=${data.reservationId}`;
       setTimer(900);
       fetchProducts();
     } else {

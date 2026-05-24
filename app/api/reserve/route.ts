@@ -53,10 +53,10 @@ export async function POST(req: Request) {
         }
       });
 
-    return NextResponse.json({
-      success: true,
-      reservation
-    });
+  return NextResponse.json({
+  success: true,
+  reservationId: reservation.id
+});
   } catch (error) {
     return NextResponse.json({
       error: "Reservation failed"
