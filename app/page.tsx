@@ -13,6 +13,31 @@ export default function Home() {
     setProducts(data);
   }
 
+  async function reserveStock(
+    productId: string,
+    warehouseId: string
+  ) {
+    const res = await fetch("/api/reserve", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        productId,
+        warehouseId
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Stock Reserved!");
+      fetchProducts();
+    } else {
+      alert(data.error);
+    }
+  }
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -55,11 +80,23 @@ export default function Home() {
                     </strong>
                   </p>
 
-                  <p>
+                  <p className="mb-3">
                     Available Stock:
                     {" "}
                     {available}
                   </p>
+
+                  <button
+                    onClick={() =>
+                      reserveStock(
+                        product.id,
+                        inventory.warehouse.id
+                      )
+                    }
+                    className="bg-black text-white px-4 py-2 rounded-lg"
+                  >
+                    Reserve Stock
+                  </button>
                 </div>
               );
             })}
