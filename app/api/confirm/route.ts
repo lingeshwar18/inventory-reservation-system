@@ -5,7 +5,14 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { reservationId } = body;
+    const reservationId = body.reservationId;
+
+    if (!reservationId) {
+      return NextResponse.json(
+        { error: "Reservation ID required" },
+        { status: 400 }
+      );
+    }
 
     const reservation =
       await prisma.reservation.findUnique({
@@ -15,15 +22,17 @@ export async function POST(req: Request) {
       });
 
     if (!reservation) {
-      return NextResponse.json({
-        error: "Reservation not found"
-      });
+      return NextResponse.json(
+        { error: "Reservation not found" },
+        { status: 404 }
+      );
     }
 
     if (new Date() > reservation.expiresAt) {
-      return NextResponse.json({
-        error: "Reservation expired"
-      });
+      return NextResponse.json(
+        { error: "Reservation expired" },
+        { status: 400 }
+      );
     }
 
     await prisma.reservation.update({
@@ -39,8 +48,11 @@ export async function POST(req: Request) {
       success: true
     });
   } catch (error) {
-    return NextResponse.json({
-      error: "Confirmation failed"
-    });
+    console.error(error);
+
+    return NextResponse.json(
+      { error: "Confirmation failed" },
+      { status: 500 }
+    );
   }
 }

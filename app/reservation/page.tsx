@@ -1,9 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import {
+  Suspense,
+  useEffect,
+  useState
+} from "react";
 
-export default function ReservationPage() {
+import { useSearchParams } from "next/navigation";
+
+function ReservationContent() {
   const params = useSearchParams();
 
   const reservationId =
@@ -46,6 +51,7 @@ export default function ReservationPage() {
   }, []);
 
   const minutes = Math.floor(timer / 60);
+
   const seconds = timer % 60;
 
   return (
@@ -85,5 +91,13 @@ export default function ReservationPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function ReservationPage() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <ReservationContent />
+    </Suspense>
   );
 }
