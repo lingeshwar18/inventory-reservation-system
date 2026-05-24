@@ -1,59 +1,87 @@
 # Inventory Reservation System
 
-A full-stack inventory reservation system built using Next.js, Prisma, Supabase PostgreSQL, and TypeScript.
+Live Demo:  
+https://inventory-reservation-system-3w8h.vercel.app/
 
-This project simulates a real-world e-commerce inventory reservation workflow where stock is temporarily reserved during checkout to avoid overselling.
+GitHub Repository:  
+https://github.com/lingeshwar18/inventory-reservation-system
+
+---
+
+# Project Overview
+
+This project is a full-stack Inventory Reservation System built using Next.js, Prisma ORM, Supabase PostgreSQL, and TypeScript.
+
+The system simulates a real-world inventory reservation workflow used in e-commerce platforms to prevent overselling of products during checkout.
+
+Users can:
+- View products and warehouse stock
+- Reserve stock temporarily
+- Release reserved stock
+- Confirm reservations
+- Track reservation expiry using a countdown timer
 
 ---
 
 # Features
 
 ## Inventory Management
-- Products and warehouses management
-- Inventory tracking per warehouse
+- Product inventory tracking
+- Warehouse-based stock management
 - Available stock calculation
-- Reserved stock tracking
+- Reserved stock handling
 
-## Reservation System
-- Reserve stock during checkout
+## Reservation Workflow
+- Reserve product stock
 - Release reserved stock
-- Confirm reservation purchase
+- Confirm purchase flow
+- Reservation checkout page
 - Reservation expiry countdown timer
 
-## Frontend
-- Product listing dashboard
-- Live stock updates
-- Reservation checkout page
-- Countdown timer UI
-- Real-time reservation flow
+## Frontend Features
+- Responsive UI
+- Product dashboard
+- Live inventory updates
+- Reservation confirmation page
+- Timer-based reservation handling
 
-## Backend
-- REST API endpoints using Next.js App Router
+## Backend Features
+- REST API routes
 - Prisma ORM integration
-- PostgreSQL database using Supabase
-- Reservation and inventory database models
+- PostgreSQL database
+- Inventory and reservation management
 
 ---
 
 # Tech Stack
 
-- Next.js 15 (App Router)
+## Frontend
+- Next.js 15
+- React
 - TypeScript
-- Prisma ORM
-- Supabase PostgreSQL
 - Tailwind CSS
+
+## Backend
+- Next.js API Routes
+- Prisma ORM
+
+## Database
+- Supabase PostgreSQL
+
+## Deployment
+- Vercel
 
 ---
 
 # API Endpoints
 
-## Products
+## Get Products
 
 ```http
 GET /api/products
 ```
 
-Returns all products with warehouse inventory details.
+Returns all products with inventory details.
 
 ---
 
@@ -63,7 +91,7 @@ Returns all products with warehouse inventory details.
 POST /api/reserve
 ```
 
-Temporarily reserves stock for checkout.
+Temporarily reserves stock for a product.
 
 ---
 
@@ -83,16 +111,16 @@ Releases reserved stock back to inventory.
 POST /api/confirm
 ```
 
-Confirms reservation after successful payment.
+Confirms reservation after checkout.
 
 ---
 
 # Reservation Workflow
 
-1. User views available products
-2. User clicks "Reserve Stock"
-3. Stock is temporarily reserved
-4. User is redirected to checkout page
+1. User views products
+2. User reserves stock
+3. Stock becomes temporarily reserved
+4. Reservation checkout page opens
 5. Countdown timer starts
 6. User can:
    - Confirm Purchase
@@ -103,12 +131,22 @@ Confirms reservation after successful payment.
 
 # Database Models
 
-- Product
-- Warehouse
-- Inventory
-- Reservation
+## Product
+Stores product information.
 
-Reservation statuses:
+## Warehouse
+Stores warehouse information.
+
+## Inventory
+Tracks stock availability and reserved stock.
+
+## Reservation
+Tracks reservation details and status.
+
+---
+
+# Reservation Status
+
 - PENDING
 - CONFIRMED
 - RELEASED
@@ -139,7 +177,7 @@ Create `.env` file:
 
 ```env
 DATABASE_URL="your_database_url"
-DIRECT_URL="your_direct_url"
+DIRECT_URL="your_direct_database_url"
 ```
 
 ---
@@ -160,7 +198,7 @@ npx prisma db push
 
 ---
 
-## 6. Seed Database
+## 6. Seed Sample Data
 
 ```bash
 npx tsx prisma/seed.ts
@@ -168,7 +206,7 @@ npx tsx prisma/seed.ts
 
 ---
 
-## 7. Start Development Server
+## 7. Run Development Server
 
 ```bash
 npm run dev
@@ -176,40 +214,43 @@ npm run dev
 
 ---
 
-# Production Expiry Strategy
+# Production Notes
 
-The frontend currently displays a live countdown timer for reservation expiry.
+The reservation timer currently works on the frontend.
 
-In production, reservation cleanup can be implemented using:
-- Vercel Cron Jobs
+In production environments, reservation expiry cleanup can be improved using:
+- Cron jobs
 - Background workers
-- Scheduled database cleanup jobs
-
----
-
-# Trade-offs
-
-- Reservation concurrency handling can be improved further using database transactions or Redis locking.
-- Automatic reservation cleanup is not fully implemented yet.
-- Idempotency support is not implemented.
+- Scheduled cleanup services
 
 ---
 
 # Future Improvements
 
-- Redis distributed locking
+- Redis-based distributed locking
 - Automatic reservation cleanup
-- Payment gateway integration
 - Authentication system
+- Payment integration
 - Admin dashboard
-- Better UI/UX improvements
+- Advanced analytics
+
+---
+
+# Challenges Solved
+
+- Inventory reservation handling
+- Preventing overselling
+- Prisma + Vercel deployment configuration
+- Reservation lifecycle management
+- Real-time stock updates
 
 ---
 
 # Deployment
 
-- Frontend: Vercel
-- Database: Supabase PostgreSQL
+Frontend deployed on Vercel.
+
+Database hosted on Supabase PostgreSQL.
 
 ---
 
